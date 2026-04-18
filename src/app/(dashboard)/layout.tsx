@@ -72,7 +72,7 @@ export default function DashboardLayout({
 
         {/* Mobile Header */}
         <header className="md:hidden flex items-center justify-between h-16 px-6 bg-white border-b border-surface-container">
-          <Sheet inverse={false}>
+          <Sheet>
             <SheetTrigger
               render={
                 <Button variant="ghost" size="icon" className="text-primary" data-slot="sheet-trigger">
