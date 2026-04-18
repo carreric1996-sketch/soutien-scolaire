@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 // The client you created in Step 1
 import { createClient } from '@/utils/supabase/server'
+import { getURL } from '@/utils/url'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -12,16 +13,10 @@ export async function GET(request: Request) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      const forwardedHost = request.headers.get('x-forwarded-host') // auth.referral
-      const isLocalEnv = process.env.NODE_ENV === 'development'
-      if (isLocalEnv) {
-        // we can be sure that there is no proxy between localhost and us
-        return NextResponse.redirect(`${origin}${next}`)
-      } else if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`)
-      } else {
-        return NextResponse.redirect(`${origin}${next}`)
-      }
+      const baseUrl = getURL()
+      // Use URL constructor to handle slashes correctly
+      const redirectUrl = new URL(next, baseUrl)
+      return NextResponse.redirect(redirectUrl.toString())
     }
   }
 
