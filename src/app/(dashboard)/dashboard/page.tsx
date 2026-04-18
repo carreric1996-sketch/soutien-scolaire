@@ -69,8 +69,9 @@ export default async function DashboardPage() {
             <p className="text-xs font-bold tracking-[0.2em] uppercase opacity-50 mb-3">
               Revenus ce mois
             </p>
-            <h2 className="text-xl md:text-5xl font-bold font-manrope">
-              {totalRevenue.toLocaleString()} <span className="text-xs md:text-xl opacity-60">MAD</span>
+            <h2 className="text-xl md:text-5xl font-bold font-manrope whitespace-nowrap">
+              {totalRevenue.toLocaleString()}{" "}
+              <span className="text-[10px] md:text-xl opacity-60">MAD</span>
             </h2>
             <div className="mt-6 flex items-center gap-4">
               <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full w-fit backdrop-blur-md">
@@ -89,18 +90,18 @@ export default async function DashboardPage() {
             Étudiants actifs
           </p>
           <h2 className="text-3xl md:text-5xl font-bold font-manrope text-primary">{activeStudents}</h2>
-          <div className="mt-4 md:mt-8 flex -space-x-2 overflow-hidden">
-            {allList.slice(0, 3).map((_, i) => (
+          <div className="mt-4 md:mt-8 flex -space-x-1.5 md:-space-x-2 overflow-hidden">
+            {allList.slice(0, 2).map((_, i) => (
               <div
                 key={i}
-                className="h-7 w-7 md:h-9 md:w-9 rounded-full border-2 border-white bg-surface-container shadow-sm flex items-center justify-center text-[8px] md:text-[10px] font-bold text-primary shrink-0"
+                className="h-6 w-6 md:h-9 md:w-9 rounded-full border-2 border-white bg-surface-container shadow-sm flex items-center justify-center text-[7px] md:text-[10px] font-bold text-primary shrink-0"
               >
                 {String.fromCharCode(65 + i)}
               </div>
             ))}
-            {activeStudents > 3 && (
-              <div className="h-7 w-7 md:h-9 md:w-9 rounded-full border-2 border-white bg-surface-container-low flex items-center justify-center text-[8px] md:text-[10px] font-bold text-on-surface-variant shadow-sm shrink-0">
-                +{activeStudents - 3}
+            {activeStudents > 2 && (
+              <div className="h-6 w-6 md:h-9 md:w-9 rounded-full border-2 border-white bg-surface-container-low flex items-center justify-center text-[7px] md:text-[10px] font-bold text-on-surface-variant shadow-sm shrink-0">
+                +{activeStudents - 2}
               </div>
             )}
           </div>
@@ -116,12 +117,16 @@ export default async function DashboardPage() {
               Les 5 étudiants les plus récemment inscrits
             </p>
           </div>
-          <div className="flex items-center gap-2 md:gap-3 overflow-x-auto pb-1 scrollbar-hide md:overflow-visible">
-            <BroadcastAction students={allList as any[]} teacherName={teacherName} centerName={centerName} />
-            <AddStudentButton />
+          <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto">
+            <div className="flex-1 md:flex-initial">
+               <BroadcastAction students={allList as any[]} teacherName={teacherName} centerName={centerName} />
+            </div>
+            <div className="flex-1 md:flex-initial">
+               <AddStudentButton />
+            </div>
             <Link
               href="/students"
-              className="hidden md:flex items-center gap-2 text-xs font-bold text-primary/60 hover:text-primary transition-colors uppercase tracking-wider whitespace-nowrap"
+              className="hidden lg:flex items-center gap-2 text-xs font-bold text-primary/60 hover:text-primary transition-colors uppercase tracking-wider whitespace-nowrap ml-2"
             >
               Voir tous <ArrowRight className="h-3.5 w-3.5" />
             </Link>

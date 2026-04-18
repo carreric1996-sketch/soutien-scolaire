@@ -106,7 +106,7 @@ export function StudentsTable({
         <div className="flex flex-col gap-3">
           {/* Subject filter pills */}
           {subjects.length > 0 && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-1 px-1">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-1 px-1 whitespace-nowrap">
               <button
                 onClick={() => setFilterSubject("")}
                 className={cn(

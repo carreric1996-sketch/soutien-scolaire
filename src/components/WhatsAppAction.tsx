@@ -52,5 +52,4 @@ export function WhatsAppAction({ studentId, url, className }: WhatsAppActionProp
     </Button>
   );
 }
-
 }
