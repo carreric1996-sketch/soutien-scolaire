@@ -9,9 +9,10 @@ import { Loader2, Check, Clock } from "lucide-react";
 interface StatusToggleProps {
   studentId: string | number;
   initialStatus: string;
+  className?: string;
 }
 
-export function StatusToggle({ studentId, initialStatus }: StatusToggleProps) {
+export function StatusToggle({ studentId, initialStatus, className }: StatusToggleProps) {
   const router = useRouter();
   const [status, setStatus] = useState(initialStatus);
   const [loading, setLoading] = useState(false);
@@ -60,11 +61,12 @@ export function StatusToggle({ studentId, initialStatus }: StatusToggleProps) {
       onClick={toggleStatus} 
       disabled={loading}
       className={cn(
-        "relative group flex items-center justify-center h-8 px-4 rounded-xl transition-all duration-500 overflow-hidden shadow-sm active:scale-95",
+        "relative group flex items-center justify-center h-9 px-4 rounded-xl transition-all duration-500 overflow-hidden shadow-sm active:scale-95",
         isPaid 
           ? "bg-tertiary-on/10 text-tertiary-on" 
           : "bg-error/10 text-error",
-        loading && "opacity-50 cursor-not-allowed"
+        loading && "opacity-50 cursor-not-allowed",
+        className
       )}
       title={isPaid ? "Marquer comme non payé" : "Marquer comme payé"}
     >

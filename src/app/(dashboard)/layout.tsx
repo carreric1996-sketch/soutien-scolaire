@@ -71,7 +71,7 @@ export default function DashboardLayout({
         </header>
 
         {/* Mobile Header */}
-        <header className="md:hidden flex items-center justify-between h-16 px-6 bg-white border-b border-surface-container">
+        <header className="md:hidden flex items-center justify-between h-16 px-4 bg-white border-b border-surface-container">
           <Sheet>
             <SheetTrigger
               render={
@@ -96,7 +96,7 @@ export default function DashboardLayout({
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto px-8 py-6 md:px-12 md:py-8 lg:px-16 lg:py-10">
+        <main className="flex-1 overflow-y-auto px-4 md:px-12 py-6 md:py-8 lg:px-16 lg:py-10">
           <div className="max-w-7xl mx-auto pb-20">
             {children}
           </div>

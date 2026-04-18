@@ -83,8 +83,8 @@ export function StudentsTable({
   return (
     <>
       {/* Search + filter row */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="relative group flex-1 min-w-64">
+      <div className="flex flex-col gap-4">
+        <div className="relative group w-full">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-primary opacity-40 group-focus-within:opacity-100 transition-opacity" />
           <input
             type="text"
@@ -103,61 +103,63 @@ export function StudentsTable({
           )}
         </div>
 
-        {/* Subject filter pills */}
-        {subjects.length > 0 && (
-          <div className="flex items-center gap-2 flex-wrap">
-            <button
-              onClick={() => setFilterSubject("")}
-              className={cn(
-                "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border",
-                filterSubject === ""
-                  ? "bg-primary text-white border-primary"
-                  : "bg-white text-on-surface-variant/60 border-surface-container hover:border-primary/30"
-              )}
-            >
-              Tous
-            </button>
-            {subjects.map((subj: string) => (
+        <div className="flex flex-col gap-3">
+          {/* Subject filter pills */}
+          {subjects.length > 0 && (
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-1 px-1">
               <button
-                key={subj}
-                onClick={() => setFilterSubject(filterSubject === subj ? "" : subj)}
+                onClick={() => setFilterSubject("")}
                 className={cn(
-                  "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border",
-                  filterSubject === subj
-                    ? "bg-primary text-white border-primary"
+                  "px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all border whitespace-nowrap shrink-0",
+                  filterSubject === ""
+                    ? "bg-primary text-white border-primary shadow-sm"
                     : "bg-white text-on-surface-variant/60 border-surface-container hover:border-primary/30"
                 )}
               >
-                {subj}
+                Tous
               </button>
-            ))}
-          </div>
-        )}
+              {subjects.map((subj: string) => (
+                <button
+                  key={subj}
+                  onClick={() => setFilterSubject(filterSubject === subj ? "" : subj)}
+                  className={cn(
+                    "px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all border whitespace-nowrap shrink-0",
+                    filterSubject === subj
+                      ? "bg-primary text-white border-primary shadow-sm"
+                      : "bg-white text-on-surface-variant/60 border-surface-container hover:border-primary/30"
+                  )}
+                >
+                  {subj}
+                </button>
+              ))}
+            </div>
+          )}
 
-        {/* Status filter pills */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <button
-            onClick={() => setFilterStatus(null)}
-            className={cn(
-              "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border",
-              filterStatus === null
-                ? "bg-primary text-white border-primary"
-                : "bg-white text-on-surface-variant/60 border-surface-container hover:border-primary/30"
-            )}
-          >
-            Tous les statuts
-          </button>
-          <button
-            onClick={() => setFilterStatus("Unpaid")}
-            className={cn(
-              "px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border",
-              filterStatus === "Unpaid"
-                ? "bg-red-500 text-white border-red-500 shadow-md scale-105"
-                : "bg-white text-red-500 border-red-100 hover:border-red-300"
-            )}
-          >
-            Impayés
-          </button>
+          {/* Status filter pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-1 px-1">
+            <button
+              onClick={() => setFilterStatus(null)}
+              className={cn(
+                "px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all border whitespace-nowrap shrink-0",
+                filterStatus === null
+                  ? "bg-primary text-white border-primary shadow-sm"
+                  : "bg-white text-on-surface-variant/60 border-surface-container hover:border-primary/30"
+              )}
+            >
+              Tous les statuts
+            </button>
+            <button
+              onClick={() => setFilterStatus("Unpaid")}
+              className={cn(
+                "px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all border whitespace-nowrap shrink-0",
+                filterStatus === "Unpaid"
+                  ? "bg-red-500 text-white border-red-500 shadow-md"
+                  : "bg-white text-red-500 border-red-100 hover:border-red-300"
+              )}
+            >
+              Impayés
+            </button>
+          </div>
         </div>
       </div>
 
@@ -183,141 +185,84 @@ export function StudentsTable({
             </p>
           </div>
         ) : (
-          <Table>
-            <TableHeader className="bg-surface-container-low/30">
-              <TableRow className="border-none hover:bg-transparent">
-                <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 px-8 py-6 font-inter">
-                  Étudiant
-                </TableHead>
-                <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter">
-                  Niveau
-                </TableHead>
-                <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter">
-                  Matière
-                </TableHead>
-                <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter">
-                  Groupe
-                </TableHead>
-                <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter">
-                  Paiement
-                </TableHead>
-                <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter text-right">
-                  Frais
-                </TableHead>
-                <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 text-right px-8 font-inter">
-                  Actions
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          <>
+            {/* Mobile Card View */}
+            <div className="md:hidden grid grid-cols-1 gap-4 p-4">
               {filtered.map((student) => {
                 const subjectColor =
                   SUBJECT_COLORS[student.subject] ?? "bg-surface-container-low text-on-surface-variant/60";
+                const isPaid = student.status === "Paid";
+                const initials = student.full_name
+                  ?.split(" ")
+                  .slice(0, 2)
+                  .map((n: string) => n[0])
+                  .join("");
 
                 return (
-                  <TableRow
-                    key={student.id || student.parent_phone}
-                    className="border-none hover:bg-surface-container-low/80 transition-all duration-300 group"
-                  >
-                    {/* Student Name — clickable */}
-                    <TableCell className="px-8 py-4">
-                      <button
+                  <Card key={student.id} className="p-5 border-none bg-white shadow-premium space-y-5">
+                    <div className="flex items-center gap-4">
+                      {/* Avatar */}
+                      <button 
                         onClick={() => setSelectedStudent(student)}
-                        className="flex items-center gap-4 text-left group/name"
+                        className="h-14 w-14 rounded-2xl bg-surface-container flex items-center justify-center text-sm font-bold text-primary shrink-0 shadow-sm relative transition-transform active:scale-95"
                       >
-                        <div className="h-10 w-10 rounded-2xl bg-surface-container flex items-center justify-center text-xs font-bold text-primary shrink-0 transition-transform group-hover/name:scale-105 shadow-sm">
-                          {student.full_name
-                            ?.split(" ")
-                            .slice(0, 2)
-                            .map((n: string) => n[0])
-                            .join("")}
-                        </div>
-                        <div>
-                          <p className="font-bold text-sm text-primary font-manrope group-hover/name:text-primary_container transition-colors">
-                            {student.full_name}
-                          </p>
-                          <p className="text-[11px] font-medium text-on-surface-variant/50 font-inter">
-                            {student.parent_phone}
-                          </p>
-                        </div>
-                      </button>
-                    </TableCell>
-
-                    {/* Level */}
-                    <TableCell className="text-sm font-semibold text-on-surface-variant/80 font-inter">
-                      <div className="flex items-center gap-2">
-                        <GraduationCap className="h-3.5 w-3.5 text-primary/30" />
-                        {student.grade_level}
-                      </div>
-                    </TableCell>
-
-                    {/* Subject badge */}
-                    <TableCell>
-                      {student.subject ? (
-                        <span
+                        {initials}
+                        <span 
                           className={cn(
-                            "inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold font-inter",
-                            subjectColor
-                          )}
-                        >
-                          {student.subject}
-                        </span>
-                      ) : (
-                        <span className="text-on-surface-variant/20 text-xs">—</span>
-                      )}
-                    </TableCell>
-
-                    {/* Groupe */}
-                    <TableCell className="text-[11px] font-bold text-on-surface-variant/70 font-inter">
-                      {student.groupe ? (
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-surface-container-high/50 text-primary border-none shadow-sm">
-                          {student.groupe}
-                        </span>
-                      ) : (
-                        <span className="text-on-surface-variant/20 text-xs">—</span>
-                      )}
-                    </TableCell>
-
-                    {/* Payment status */}
-                    <TableCell>
-                      <div className="flex flex-col gap-1">
-                        <StatusToggle
-                          studentId={student.id}
-                          initialStatus={student.status}
+                            "absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white shadow-sm", 
+                            isPaid ? "bg-emerald-500" : "bg-red-500"
+                          )} 
                         />
-                        <div className="flex flex-col gap-0.5">
-                          {student.last_payment_date && (
-                            <p className="text-[9px] font-bold text-on-surface-variant/40 pl-1">
-                              Dernier: <span className="text-primary/60">{format(new Date(student.last_payment_date), "d MMM", { locale: fr })}</span>
-                            </p>
+                      </button>
+
+                      {/* Info */}
+                      <div className="flex-1 min-w-0" onClick={() => setSelectedStudent(student)}>
+                        <h4 className="font-bold text-lg text-primary font-manrope truncate leading-tight">
+                          {student.full_name}
+                        </h4>
+                        <div className="flex flex-wrap gap-2 mt-1.5">
+                          {student.subject && (
+                            <span className={cn("inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider", subjectColor)}>
+                              {student.subject}
+                            </span>
                           )}
-                          {student.last_reminded_at && (
-                            <p
-                              className={cn(
-                                "text-[8px] font-black uppercase tracking-widest pl-1",
-                                isToday(new Date(student.last_reminded_at))
-                                  ? "text-orange-500"
-                                  : "text-on-surface-variant/30"
-                              )}
-                            >
-                              {isToday(new Date(student.last_reminded_at))
-                                ? "Relancé"
-                                : `Relance: ${format(new Date(student.last_reminded_at), "d MMM", { locale: fr })}`}
-                            </p>
-                          )}
+                          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-wide bg-surface-container-low px-2 py-0.5 rounded-md">
+                            <GraduationCap className="h-3 w-3 opacity-40" />
+                            {student.grade_level}
+                          </span>
                         </div>
                       </div>
-                    </TableCell>
 
-                    {/* Monthly fee */}
-                    <TableCell className="text-sm font-bold text-primary text-right font-manrope pr-4">
-                      {student.monthly_fee?.toLocaleString()} <span className="text-[10px] opacity-40">MAD</span>
-                    </TableCell>
+                      {/* Options */}
+                      <div className="shrink-0 flex items-center justify-center h-10 w-10">
+                         <StudentActions student={student} />
+                      </div>
+                    </div>
 
-                    {/* Actions */}
-                    <TableCell className="text-right px-8">
-                      <div className="flex items-center justify-end gap-2">
-                        {student.parent_phone && (
+                    <div className="grid grid-cols-1 gap-3">
+                      {/* Status Toggle - Thumb friendly */}
+                      <div className="flex flex-col gap-1.5">
+                        <span className="text-[8px] font-black uppercase tracking-widest text-on-surface-variant/30 pl-1">
+                          Statut de Paiement
+                        </span>
+                        <StatusToggle 
+                          studentId={student.id} 
+                          initialStatus={student.status} 
+                          className="w-full h-12 text-sm"
+                        />
+                        {student.last_payment_date && (
+                          <p className="text-[9px] font-bold text-on-surface-variant/30 pl-1 mt-0.5">
+                            Dernier paiement : {format(new Date(student.last_payment_date), "d MMMM yyyy", { locale: fr })}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* WhatsApp - Thumb friendly */}
+                      <div className="flex flex-col gap-1.5 mt-1">
+                        <span className="text-[8px] font-black uppercase tracking-widest text-on-surface-variant/30 pl-1">
+                          Relancer par WhatsApp
+                        </span>
+                        {student.parent_phone ? (
                           <WhatsAppAction
                             studentId={student.id}
                             url={getWhatsAppUrl(
@@ -327,16 +272,178 @@ export function StudentsTable({
                               teacherName,
                               centerName
                             )}
+                            className="w-full h-12 bg-whatsapp/10 text-[#002109] flex items-center justify-center gap-3 border-none p-0"
                           />
+                        ) : (
+                          <div className="h-12 w-full rounded-xl bg-surface-container-low flex items-center justify-center text-[10px] font-bold text-on-surface-variant/30 italic">
+                            Aucun numéro de téléphone
+                          </div>
                         )}
-                        <StudentActions student={student} />
                       </div>
-                    </TableCell>
-                  </TableRow>
+                    </div>
+                  </Card>
                 );
               })}
-            </TableBody>
-          </Table>
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden md:block">
+              <Table>
+                <TableHeader className="bg-surface-container-low/30">
+                  <TableRow className="border-none hover:bg-transparent">
+                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 px-8 py-6 font-inter">
+                      Étudiant
+                    </TableHead>
+                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter">
+                      Niveau
+                    </TableHead>
+                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter">
+                      Matière
+                    </TableHead>
+                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter">
+                      Groupe
+                    </TableHead>
+                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter">
+                      Paiement
+                    </TableHead>
+                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter text-right">
+                      Frais
+                    </TableHead>
+                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 text-right px-8 font-inter">
+                      Actions
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map((student) => {
+                    const subjectColor =
+                      SUBJECT_COLORS[student.subject] ?? "bg-surface-container-low text-on-surface-variant/60";
+
+                    return (
+                      <TableRow
+                        key={student.id || student.parent_phone}
+                        className="border-none hover:bg-surface-container-low/80 transition-all duration-300 group"
+                      >
+                        {/* Student Name — clickable */}
+                        <TableCell className="px-8 py-4">
+                          <button
+                            onClick={() => setSelectedStudent(student)}
+                            className="flex items-center gap-4 text-left group/name"
+                          >
+                            <div className="h-10 w-10 rounded-2xl bg-surface-container flex items-center justify-center text-xs font-bold text-primary shrink-0 transition-transform group-hover/name:scale-105 shadow-sm">
+                              {student.full_name
+                                ?.split(" ")
+                                .slice(0, 2)
+                                .map((n: string) => n[0])
+                                .join("")}
+                            </div>
+                            <div>
+                              <p className="font-bold text-sm text-primary font-manrope group-hover/name:text-primary_container transition-colors">
+                                {student.full_name}
+                              </p>
+                              <p className="text-[11px] font-medium text-on-surface-variant/50 font-inter">
+                                {student.parent_phone}
+                              </p>
+                            </div>
+                          </button>
+                        </TableCell>
+
+                        {/* Level */}
+                        <TableCell className="text-sm font-semibold text-on-surface-variant/80 font-inter">
+                          <div className="flex items-center gap-2">
+                            <GraduationCap className="h-3.5 w-3.5 text-primary/30" />
+                            {student.grade_level}
+                          </div>
+                        </TableCell>
+
+                        {/* Subject badge */}
+                        <TableCell>
+                          {student.subject ? (
+                            <span
+                              className={cn(
+                                "inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold font-inter",
+                                subjectColor
+                              )}
+                            >
+                              {student.subject}
+                            </span>
+                          ) : (
+                            <span className="text-on-surface-variant/20 text-xs">—</span>
+                          )}
+                        </TableCell>
+
+                        {/* Groupe */}
+                        <TableCell className="text-[11px] font-bold text-on-surface-variant/70 font-inter">
+                          {student.groupe ? (
+                            <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-surface-container-high/50 text-primary border-none shadow-sm">
+                              {student.groupe}
+                            </span>
+                          ) : (
+                            <span className="text-on-surface-variant/20 text-xs">—</span>
+                          )}
+                        </TableCell>
+
+                        {/* Payment status */}
+                        <TableCell>
+                          <div className="flex flex-col gap-1">
+                            <StatusToggle
+                              studentId={student.id}
+                              initialStatus={student.status}
+                            />
+                            <div className="flex flex-col gap-0.5">
+                              {student.last_payment_date && (
+                                <p className="text-[9px] font-bold text-on-surface-variant/40 pl-1">
+                                  Dernier: <span className="text-primary/60">{format(new Date(student.last_payment_date), "d MMM", { locale: fr })}</span>
+                                </p>
+                              )}
+                              {student.last_reminded_at && (
+                                <p
+                                  className={cn(
+                                    "text-[8px] font-black uppercase tracking-widest pl-1",
+                                    isToday(new Date(student.last_reminded_at))
+                                      ? "text-orange-500"
+                                      : "text-on-surface-variant/30"
+                                  )}
+                                >
+                                  {isToday(new Date(student.last_reminded_at))
+                                    ? "Relancé"
+                                    : `Relance: ${format(new Date(student.last_reminded_at), "d MMM", { locale: fr })}`}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </TableCell>
+
+                        {/* Monthly fee */}
+                        <TableCell className="text-sm font-bold text-primary text-right font-manrope pr-4">
+                          {student.monthly_fee?.toLocaleString()} <span className="text-[10px] opacity-40">MAD</span>
+                        </TableCell>
+
+                        {/* Actions */}
+                        <TableCell className="text-right px-8">
+                          <div className="flex items-center justify-end gap-2">
+                            {student.parent_phone && (
+                              <WhatsAppAction
+                                studentId={student.id}
+                                url={getWhatsAppUrl(
+                                  student.parent_phone,
+                                  student.status,
+                                  student.full_name,
+                                  teacherName,
+                                  centerName
+                                )}
+                              />
+                            )}
+                            <StudentActions student={student} />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          </>
         )}
 
         <div className="p-8 bg-surface-container-low/20 flex items-center justify-between text-[11px] text-on-surface-variant/50 font-bold uppercase tracking-widest font-inter">
