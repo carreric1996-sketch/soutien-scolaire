@@ -3,19 +3,12 @@
 import { useState, useMemo } from "react";
 import { X, MessageSquare, ExternalLink, Calendar, CheckCircle2, Loader2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-
-interface Student {
-  id: string | number;
-  full_name: string;
-  parent_phone: string;
-  status: string;
-  last_reminded_at?: string | null;
-}
+import { getWhatsAppUrl } from "@/lib/students";
+import { Student } from "@/types/student";
 
 interface BroadcastModalProps {
   isOpen: boolean;
@@ -25,12 +18,6 @@ interface BroadcastModalProps {
   centerName?: string;
 }
 
-function getWhatsAppUrl(phone: string, studentName: string, teacherName: string, centerName?: string) {
-  const cleanPhone = phone.replace(/\D/g, "");
-  const sender = centerName ? `${teacherName} (${centerName})` : teacherName;
-  const message = `Bonjour, c'est ${sender}. Je vous contacte pour le suivi du cours de Maths/Physique de ${studentName}. Pourriez-vous nous envoyer le règlement pour ce mois ? Merci !`;
-  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-}
 
 export function BroadcastModal({ isOpen, onClose, students, teacherName, centerName }: BroadcastModalProps) {
   const router = useRouter();
@@ -46,14 +33,12 @@ export function BroadcastModal({ isOpen, onClose, students, teacherName, centerN
   const handleSendReminder = async (studentId: string | number) => {
     const now = new Date().toISOString();
     try {
+      const supabase = createClient();
       const { error } = await supabase
         .from("students")
         .update({ last_reminded_at: now })
         .eq("id", studentId);
 
-      if (error) {
-        console.warn("Could not update last_reminded_at. Did you add the column? SQL: ALTER TABLE students ADD COLUMN last_reminded_at TIMESTAMP WITH TIME ZONE;");
-      }
       
       router.refresh();
     } catch (error) {
@@ -123,7 +108,7 @@ export function BroadcastModal({ isOpen, onClose, students, teacherName, centerN
                     </div>
                   </div>
                   <a 
-                    href={getWhatsAppUrl(student.parent_phone, student.full_name, teacherName, centerName)}
+                    href={getWhatsAppUrl(student.parent_phone, student.status, student.full_name, teacherName, centerName)}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => handleSendReminder(student.id)}

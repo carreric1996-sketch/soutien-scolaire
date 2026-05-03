@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { GraduationCap, LogIn, UserPlus, Loader2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -141,7 +142,7 @@ export default function LoginPage() {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 flex flex-col">
                 <Label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-on-surface-variant/70">
                   Mot de passe
                 </Label>
@@ -154,6 +155,11 @@ export default function LoginPage() {
                   required
                   className="bg-surface-container-low border-none h-12 rounded-xl focus:ring-2 focus:ring-primary/10 transition-all font-medium"
                 />
+                {!isSignUp && (
+                  <Link href="/forgot-password" title="Mot de passe oublié ?" className="text-[11px] font-bold text-primary/50 hover:text-primary transition-colors self-end">
+                    Mot de passe oublié ?
+                  </Link>
+                )}
               </div>
 
               {error && (
@@ -219,7 +225,7 @@ export default function LoginPage() {
                   fill="#EA4335"
                 />
               </svg>
-              Continue with Google
+              Continue avec Google
             </Button>
 
             <Button

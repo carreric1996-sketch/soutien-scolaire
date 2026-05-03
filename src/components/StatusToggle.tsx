@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { supabase } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { Loader2, Check, Clock } from "lucide-react";
 
@@ -39,6 +39,7 @@ export function StatusToggle({ studentId, initialStatus, className }: StatusTogg
     setLoading(true);
 
     try {
+      const supabase = createClient();
       const { error } = await supabase
         .from("students")
         .update(updateData)
@@ -61,10 +62,10 @@ export function StatusToggle({ studentId, initialStatus, className }: StatusTogg
       onClick={toggleStatus} 
       disabled={loading}
       className={cn(
-        "relative group flex items-center justify-center h-9 px-4 rounded-xl transition-all duration-500 overflow-hidden shadow-sm active:scale-95",
+        "relative group flex items-center justify-center h-9 px-2 rounded-xl transition-all duration-500 overflow-hidden shadow-sm active:scale-95",
         isPaid 
-          ? "bg-tertiary-on/10 text-tertiary-on" 
-          : "bg-error/10 text-error",
+          ? "bg-tertiary-on/10 text-[#00a64b]" 
+          : "bg-error-container/20 text-[#ba1a1a]",
         loading && "opacity-50 cursor-not-allowed",
         className
       )}

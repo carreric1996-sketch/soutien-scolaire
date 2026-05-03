@@ -21,9 +21,10 @@ import { isToday, format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { SUBJECT_COLORS, getWhatsAppUrl } from "@/lib/students";
+import { Student } from "@/types/student";
 
 interface StudentsTableProps {
-  students: any[];
+  students: Student[];
   teacherName: string;
   centerName?: string;
 }
@@ -39,8 +40,10 @@ export function StudentsTable({
   const [query, setQuery] = useState("");
   const [filterSubject, setFilterSubject] = useState("");
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
-  const [selectedStudent, setSelectedStudent] = useState<any | null>(null);
-  const [editStudent, setEditStudent] = useState<any | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [editStudent, setEditStudent] = useState<Student | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 15;
 
   // Set initial status filter from query param
   useEffect(() => {
@@ -49,6 +52,11 @@ export function StudentsTable({
       setFilterStatus("Unpaid");
     }
   }, [searchParams]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [query, filterSubject, filterStatus]);
 
   // Unique subjects and groupes from current student list
   const subjects = Array.from(new Set(students.map((s) => s.subject).filter(Boolean)));
@@ -79,6 +87,12 @@ export function StudentsTable({
       return matchesQuery && matchesSubject && matchesStatus;
     });
   }, [students, query, filterSubject, filterStatus]);
+
+  const totalPages = Math.ceil(filtered.length / pageSize);
+  const paginatedStudents = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filtered.slice(start, start + pageSize);
+  }, [filtered, currentPage, pageSize]);
 
   return (
     <>
@@ -187,8 +201,8 @@ export function StudentsTable({
         ) : (
           <>
             {/* Mobile Card View */}
-            <div className="md:hidden grid grid-cols-1 gap-4 p-4">
-              {filtered.map((student) => {
+            <div className="lg:hidden grid grid-cols-1 gap-4 p-4">
+              {paginatedStudents.map((student) => {
                 const subjectColor =
                   SUBJECT_COLORS[student.subject] ?? "bg-surface-container-low text-on-surface-variant/60";
                 const isPaid = student.status === "Paid";
@@ -199,17 +213,17 @@ export function StudentsTable({
                   .join("");
 
                 return (
-                  <Card key={student.id} className="p-5 border-none bg-white shadow-premium space-y-5">
+                  <Card key={student.id} className="p-6 border-none bg-surface-container-low rounded-[32px] space-y-6 shadow-sm">
                     <div className="flex items-center gap-4">
                       {/* Avatar */}
                       <button 
                         onClick={() => setSelectedStudent(student)}
-                        className="h-14 w-14 rounded-2xl bg-surface-container flex items-center justify-center text-sm font-bold text-primary shrink-0 shadow-sm relative transition-transform active:scale-95"
+                        className="h-16 w-16 rounded-3xl bg-white flex items-center justify-center text-sm font-bold text-primary shrink-0 shadow-sm relative transition-transform active:scale-95"
                       >
                         {initials}
                         <span 
                           className={cn(
-                            "absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white shadow-sm", 
+                            "absolute -bottom-1 -right-1 h-5 w-5 rounded-full border-2 border-white shadow-sm", 
                             isPaid ? "bg-emerald-500" : "bg-red-500"
                           )} 
                         />
@@ -217,17 +231,17 @@ export function StudentsTable({
 
                       {/* Info */}
                       <div className="flex-1 min-w-0" onClick={() => setSelectedStudent(student)}>
-                        <h4 className="font-bold text-lg text-primary font-manrope truncate leading-tight">
+                        <h4 className="font-bold text-xl text-primary font-manrope truncate leading-tight tracking-tight">
                           {student.full_name}
                         </h4>
-                        <div className="flex flex-wrap gap-2 mt-1.5">
+                        <div className="flex flex-wrap gap-2 mt-2">
                           {student.subject && (
-                            <span className={cn("inline-flex items-center px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider", subjectColor)}>
+                            <span className={cn("inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider", subjectColor)}>
                               {student.subject}
                             </span>
                           )}
-                          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-on-surface-variant/50 uppercase tracking-wide bg-surface-container-low px-2 py-0.5 rounded-md">
-                            <GraduationCap className="h-3 w-3 opacity-40" />
+                          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-on-surface-variant/50 uppercase tracking-wide bg-white/50 px-3 py-1 rounded-lg">
+                            <GraduationCap className="h-3.5 w-3.5 opacity-40" />
                             {student.grade_level}
                           </span>
                         </div>
@@ -248,7 +262,7 @@ export function StudentsTable({
                         <StatusToggle 
                           studentId={student.id} 
                           initialStatus={student.status} 
-                          className="w-full h-12 text-sm"
+                          className="w-full h-14 text-base rounded-2xl"
                         />
                         {student.last_payment_date && (
                           <p className="text-[9px] font-bold text-on-surface-variant/30 pl-1 mt-0.5">
@@ -287,35 +301,35 @@ export function StudentsTable({
             </div>
 
             {/* Desktop Table View */}
-            <div className="hidden md:block">
+            <div className="hidden lg:block pl-4">
               <Table>
                 <TableHeader className="bg-surface-container-low/30">
                   <TableRow className="border-none hover:bg-transparent">
-                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 px-8 py-6 font-inter">
+                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 px-3 py-3 font-inter min-w-[180px] max-w-[200px]">
                       Étudiant
                     </TableHead>
-                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter">
+                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 px-3 py-3 font-inter w-[100px]">
                       Niveau
                     </TableHead>
-                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter">
+                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 px-3 py-3 font-inter w-[140px]">
                       Matière
                     </TableHead>
-                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter">
+                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 px-3 py-3 font-inter w-[100px]">
                       Groupe
                     </TableHead>
-                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter">
+                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 px-3 py-3 font-inter w-[140px]">
                       Paiement
                     </TableHead>
-                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 font-inter text-right">
+                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 px-3 py-3 font-inter text-right w-[90px] hidden xl:table-cell">
                       Frais
                     </TableHead>
-                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 text-right px-8 font-inter">
+                    <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/50 px-3 py-3 text-right font-inter w-[80px]">
                       Actions
                     </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filtered.map((student) => {
+                  {paginatedStudents.map((student) => {
                     const subjectColor =
                       SUBJECT_COLORS[student.subject] ?? "bg-surface-container-low text-on-surface-variant/60";
 
@@ -325,23 +339,23 @@ export function StudentsTable({
                         className="border-none hover:bg-surface-container-low/80 transition-all duration-300 group"
                       >
                         {/* Student Name — clickable */}
-                        <TableCell className="px-8 py-4">
+                        <TableCell className="px-3 py-3 min-w-[180px] max-w-[200px]">
                           <button
                             onClick={() => setSelectedStudent(student)}
-                            className="flex items-center gap-4 text-left group/name"
+                            className="flex items-center gap-3 text-left group/name w-full"
                           >
-                            <div className="h-10 w-10 rounded-2xl bg-surface-container flex items-center justify-center text-xs font-bold text-primary shrink-0 transition-transform group-hover/name:scale-105 shadow-sm">
+                            <div className="h-8 w-8 rounded-2xl bg-surface-container flex items-center justify-center text-xs font-bold text-primary shrink-0 transition-transform group-hover/name:scale-105 shadow-sm">
                               {student.full_name
                                 ?.split(" ")
                                 .slice(0, 2)
                                 .map((n: string) => n[0])
                                 .join("")}
                             </div>
-                            <div>
-                              <p className="font-bold text-sm text-primary font-manrope group-hover/name:text-primary_container transition-colors">
+                            <div className="min-w-0 flex-1">
+                              <p className="font-bold text-sm text-primary font-manrope group-hover/name:text-primary_container transition-colors truncate">
                                 {student.full_name}
                               </p>
-                              <p className="text-[11px] font-medium text-on-surface-variant/50 font-inter">
+                              <p className="text-[11px] font-medium text-on-surface-variant/50 font-inter truncate">
                                 {student.parent_phone}
                               </p>
                             </div>
@@ -349,7 +363,7 @@ export function StudentsTable({
                         </TableCell>
 
                         {/* Level */}
-                        <TableCell className="text-sm font-semibold text-on-surface-variant/80 font-inter">
+                        <TableCell className="px-3 py-3 text-sm font-semibold text-on-surface-variant/80 font-inter w-[100px]">
                           <div className="flex items-center gap-2">
                             <GraduationCap className="h-3.5 w-3.5 text-primary/30" />
                             {student.grade_level}
@@ -357,7 +371,7 @@ export function StudentsTable({
                         </TableCell>
 
                         {/* Subject badge */}
-                        <TableCell>
+                        <TableCell className="px-3 py-3 w-[140px]">
                           {student.subject ? (
                             <span
                               className={cn(
@@ -373,7 +387,7 @@ export function StudentsTable({
                         </TableCell>
 
                         {/* Groupe */}
-                        <TableCell className="text-[11px] font-bold text-on-surface-variant/70 font-inter">
+                        <TableCell className="px-3 py-3 text-[11px] font-bold text-on-surface-variant/70 font-inter w-[100px]">
                           {student.groupe ? (
                             <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-surface-container-high/50 text-primary border-none shadow-sm">
                               {student.groupe}
@@ -384,7 +398,7 @@ export function StudentsTable({
                         </TableCell>
 
                         {/* Payment status */}
-                        <TableCell>
+                        <TableCell className="px-3 py-3 w-[140px]">
                           <div className="flex flex-col gap-1">
                             <StatusToggle
                               studentId={student.id}
@@ -415,12 +429,12 @@ export function StudentsTable({
                         </TableCell>
 
                         {/* Monthly fee */}
-                        <TableCell className="text-sm font-bold text-primary text-right font-manrope pr-4">
+                        <TableCell className="px-3 py-3 text-sm font-bold text-primary text-right font-manrope w-[90px] hidden xl:table-cell">
                           {student.monthly_fee?.toLocaleString()} <span className="text-[10px] opacity-40">MAD</span>
                         </TableCell>
 
                         {/* Actions */}
-                        <TableCell className="text-right px-8">
+                        <TableCell className="px-3 py-3 text-right w-[80px]">
                           <div className="flex items-center justify-end gap-2">
                             {student.parent_phone && (
                               <WhatsAppAction
@@ -452,12 +466,23 @@ export function StudentsTable({
             {query
               ? `${filtered.length} / ${students.length} Étudiants`
               : `${students.length} Étudiants inscrits`}
+            {totalPages > 1 && <span className="ml-2">— Page {currentPage} sur {totalPages}</span>}
           </span>
           <div className="flex gap-2">
-            <button className="h-8 w-8 rounded-xl bg-white/50 flex items-center justify-center hover:bg-white transition-colors disabled:opacity-30 border-none shadow-sm" disabled>
+            <button 
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+              className="h-8 w-8 rounded-xl bg-white/50 flex items-center justify-center hover:bg-white transition-colors disabled:opacity-30 border-none shadow-sm"
+            >
               &lt;
             </button>
-            <button className="h-8 w-8 rounded-xl bg-white/50 flex items-center justify-center hover:bg-white transition-colors border-none shadow-sm">&gt;</button>
+            <button 
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              disabled={currentPage >= totalPages}
+              className="h-8 w-8 rounded-xl bg-white/50 flex items-center justify-center hover:bg-white transition-colors border-none shadow-sm disabled:opacity-30"
+            >
+              &gt;
+            </button>
           </div>
         </div>
       </Card>

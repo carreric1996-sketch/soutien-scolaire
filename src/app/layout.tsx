@@ -28,7 +28,10 @@ export default function RootLayout({
       className={`${inter.variable} ${manrope.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="h-full bg-background text-on-surface font-inter">
+      <body 
+        className="h-full bg-background text-on-surface font-inter"
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>

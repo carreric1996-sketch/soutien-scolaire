@@ -3,14 +3,16 @@
 import { useState, useEffect } from "react";
 import { X, User, GraduationCap, Phone, Loader2, BookOpen, CreditCard, Calendar, StickyNote, CheckCircle2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/client";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { Student } from "@/types/student";
 
 interface StudentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  student?: any;
+  student?: Student;
 }
 
 const SUBJECTS = [
@@ -72,6 +74,14 @@ export function StudentModal({ isOpen, onClose, student }: StudentModalProps) {
     setLoading(true);
 
     try {
+      const digitsOnly = formData.parentWhatsApp.replace(/\D/g, "");
+      if (digitsOnly.length < 10) {
+        toast.error("Le numéro de téléphone doit contenir au moins 10 chiffres.");
+        setLoading(false);
+        return;
+      }
+
+      const supabase = createClient();
       const payload = {
         full_name: formData.fullName,
         grade_level: formData.gradeLevel,
@@ -108,6 +118,7 @@ export function StudentModal({ isOpen, onClose, student }: StudentModalProps) {
 
       if (error) throw error;
 
+      toast.success(student ? "Informations mises à jour." : "Étudiant inscrit avec succès.");
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
@@ -117,7 +128,7 @@ export function StudentModal({ isOpen, onClose, student }: StudentModalProps) {
 
     } catch (error) {
       console.error("Error saving student:", error);
-      alert("Une erreur est survenue lors de l'enregistrement.");
+      toast.error("Une erreur est survenue lors de l'enregistrement.");
     } finally {
       setLoading(false);
     }

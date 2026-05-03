@@ -4,9 +4,11 @@ import { Sidebar } from "@/components/Sidebar";
 import { Menu, User, HelpCircle } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { NotificationBell } from "@/components/NotificationBell";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
+import { BottomNav } from "@/components/BottomNav";
+import { AddStudentFAB } from "@/components/AddStudentFAB";
+import { Toaster } from "sonner";
 
 export default function DashboardLayout({
   children,
@@ -40,12 +42,11 @@ export default function DashboardLayout({
   return (
     <div className="flex h-full overflow-hidden">
       {/* Desktop Sidebar */}
-      <Sidebar className="hidden md:flex w-72 flex-col fixed inset-y-0 z-[80]" />
+      <Sidebar className="hidden lg:flex w-56 flex-col fixed inset-y-0 z-[80]" />
 
-      <div className="flex-1 flex flex-col md:pl-72 h-full overflow-hidden">
+      <div className="flex-1 flex flex-col lg:pl-56 h-full overflow-hidden">
         {/* Top Bar (Desktop) */}
-        <header className="hidden md:flex items-center justify-end h-20 px-12 gap-6 bg-transparent">
-          <NotificationBell />
+        <header className="hidden lg:flex items-center justify-end h-20 px-12 gap-6 bg-transparent">
           <Button variant="ghost" size="icon" className="text-on-surface-variant opacity-60">
             <HelpCircle className="h-5 w-5" />
           </Button>
@@ -71,7 +72,7 @@ export default function DashboardLayout({
         </header>
 
         {/* Mobile Header */}
-        <header className="md:hidden flex items-center justify-between h-16 px-4 bg-white border-b border-surface-container">
+        <header className="lg:hidden flex items-center justify-between h-16 px-4 bg-white border-b border-surface-container">
           <Sheet>
             <SheetTrigger
               render={
@@ -96,11 +97,15 @@ export default function DashboardLayout({
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto px-4 md:px-12 py-6 md:py-8 lg:px-16 lg:py-10">
-          <div className="max-w-7xl mx-auto pb-20">
+        <main className="flex-1 overflow-y-auto px-4 lg:px-6 py-6 lg:py-8 xl:px-6 xl:py-10">
+          <div className="max-w-7xl mx-auto lg:pb-20 pb-28">
             {children}
           </div>
         </main>
+
+        <AddStudentFAB />
+        <BottomNav />
+        <Toaster richColors position="top-right" />
       </div>
     </div>
   );

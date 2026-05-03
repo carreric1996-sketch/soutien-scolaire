@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { AddStudentButton } from "@/components/AddStudentButton";
 import { BroadcastAction } from "@/components/BroadcastAction";
-import { TrendingUp, CreditCard, Calendar, FileText, CheckSquare, ArrowRight } from "lucide-react";
+import { TrendingUp, CreditCard, ArrowRight, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -17,6 +17,7 @@ import { fr } from "date-fns/locale";
 import { StatusToggle } from "@/components/StatusToggle";
 import { WhatsAppAction } from "@/components/WhatsAppAction";
 import { SUBJECT_COLORS, getWhatsAppUrl } from "@/lib/students";
+import { Student } from "@/types/student";
 
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
@@ -63,66 +64,88 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-10 pb-12">
       {/* Hero Metrics Grid */}
-      <div className="grid gap-4 md:gap-6 grid-cols-2 md:grid-cols-12">
-        <Card className="col-span-1 md:col-span-8 border-none bg-[linear-gradient(135deg,var(--primary),var(--primary-container))] py-6 md:pt-12 md:pb-16 px-6 md:px-12 text-white shadow-premium relative overflow-hidden group">
-          <div className="relative z-10">
-            <p className="text-xs font-bold tracking-[0.2em] uppercase opacity-50 mb-3">
-              Revenus ce mois
-            </p>
-            <h2 className="text-xl md:text-5xl font-bold font-manrope whitespace-nowrap">
-              {totalRevenue.toLocaleString()}{" "}
-              <span className="text-[10px] md:text-xl opacity-60">MAD</span>
-            </h2>
-            <div className="mt-6 flex items-center gap-4">
-              <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full w-fit backdrop-blur-md">
-                <TrendingUp className="h-4 w-4 text-whatsapp" />
-                <span className="text-xs font-bold text-whatsapp tracking-wide">
-                  {paidCount}/{activeStudents} payés
-                </span>
+      <div className="grid gap-4 md:gap-6 grid-cols-2 md:grid-cols-12 px-1">
+        <Card className="col-span-1 md:col-span-8 border-none bg-[linear-gradient(135deg,var(--primary),var(--primary-container))] p-5 text-white shadow-premium relative overflow-hidden group rounded-[32px] h-40 flex flex-col justify-between">
+          <div className="relative z-10 flex flex-col h-full justify-between">
+            <div className="flex items-start gap-4">
+              <TrendingUp className="h-10 w-10 text-white/15 shrink-0" />
+              <div>
+                <p className="text-[10px] tracking-widest uppercase text-white/50 mb-1">
+                  Revenus confirmés
+                </p>
+                <h2 className="text-4xl font-black font-manrope tracking-tight leading-none mt-1">
+                  {totalRevenue.toLocaleString()}{" "}
+                  <span className="text-xl font-normal opacity-60">MAD</span>
+                </h2>
+              </div>
+            </div>
+            <div className="mt-auto">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-xs font-bold text-white/70">{paidCount} / {activeStudents} payés</span>
+              </div>
+              <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#4ade80] rounded-full" 
+                  style={{ width: `${activeStudents > 0 ? (paidCount / activeStudents) * 100 : 0}%` }} 
+                />
               </div>
             </div>
           </div>
-          <CreditCard className="absolute -right-8 -bottom-8 h-72 w-72 text-white opacity-[0.03] rotate-12 group-hover:rotate-0 transition-all duration-700" />
+          <CreditCard className="absolute -right-8 -bottom-8 h-48 w-48 md:h-72 md:w-72 text-white opacity-[0.03] rotate-12 group-hover:rotate-0 transition-all duration-700" />
         </Card>
 
-        <Card className="col-span-1 md:col-span-4 border-none bg-white py-6 md:pt-12 md:pb-16 px-6 md:px-10 shadow-premium flex flex-col justify-center">
-          <p className="text-xs font-bold tracking-[0.2em] uppercase text-on-surface-variant opacity-50 mb-3">
-            Étudiants actifs
-          </p>
-          <h2 className="text-3xl md:text-5xl font-bold font-manrope text-primary">{activeStudents}</h2>
-          <div className="mt-4 md:mt-8 flex -space-x-1.5 md:-space-x-2 overflow-hidden">
-            {allList.slice(0, 2).map((_, i) => (
-              <div
-                key={i}
-                className="h-6 w-6 md:h-9 md:w-9 rounded-full border-2 border-white bg-surface-container shadow-sm flex items-center justify-center text-[7px] md:text-[10px] font-bold text-primary shrink-0"
-              >
-                {String.fromCharCode(65 + i)}
+        <Card className="col-span-1 md:col-span-4 border-none bg-white p-5 shadow-premium rounded-[32px] h-40 flex flex-col justify-between">
+          <div className="flex flex-col h-full justify-between">
+            <div className="flex items-start gap-4">
+              <Users className="h-9 w-9 text-primary/20 shrink-0" />
+              <div>
+                <p className="text-[10px] tracking-widest uppercase text-primary/40 mb-1">
+                  Total Inscrits
+                </p>
+                <h2 className="text-4xl font-black font-manrope text-primary leading-none mt-1">
+                  {activeStudents}
+                </h2>
+                <p className="text-xs text-on-surface-variant/60 mt-1 font-medium">
+                  étudiants actifs ce mois
+                </p>
               </div>
-            ))}
-            {activeStudents > 2 && (
-              <div className="h-6 w-6 md:h-9 md:w-9 rounded-full border-2 border-white bg-surface-container-low flex items-center justify-center text-[7px] md:text-[10px] font-bold text-on-surface-variant shadow-sm shrink-0">
-                +{activeStudents - 2}
-              </div>
-            )}
+            </div>
+            <div className="flex gap-2 overflow-hidden mt-auto">
+              {allList.slice(0, 2).map((_, i) => (
+                <div
+                  key={i}
+                  className="px-3 py-1 rounded-full bg-primary text-white font-mono text-xs flex items-center justify-center shrink-0"
+                >
+                  {String.fromCharCode(65 + i)}
+                </div>
+              ))}
+              {activeStudents > 2 && (
+                <div className="px-3 py-1 rounded-full bg-primary text-white font-mono text-xs flex items-center justify-center shrink-0">
+                  +{activeStudents - 2}
+                </div>
+              )}
+            </div>
           </div>
         </Card>
       </div>
 
       {/* Dernières Inscriptions */}
       <div className="space-y-5">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
           <div>
-            <h3 className="text-xl md:text-2xl font-bold font-manrope text-primary">Dernières Inscriptions</h3>
-            <p className="text-[10px] md:text-xs text-on-surface-variant/50 font-medium mt-0.5 md:mt-1">
-              Les 5 étudiants les plus récemment inscrits
+            <p className="text-[10px] tracking-widest uppercase text-primary/40 mb-0.5">
+              Vue d&apos;ensemble
             </p>
+            <h1 className="text-3xl font-bold font-manrope text-primary flex items-center gap-4">
+              Dashboard
+            </h1>
           </div>
-          <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto">
-            <div className="flex-1 md:flex-initial">
-               <BroadcastAction students={allList as any[]} teacherName={teacherName} centerName={centerName} />
+          <div className="flex flex-col lg:flex-row lg:items-center gap-4 w-full lg:w-auto">
+            <div className="hidden lg:block">
+              <AddStudentButton />
             </div>
-            <div className="flex-1 md:flex-initial">
-               <AddStudentButton />
+            <div className="lg:h-11">
+               <BroadcastAction students={allList as Student[]} teacherName={teacherName} centerName={centerName} />
             </div>
             <Link
               href="/students"
@@ -273,25 +296,6 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
-      {/* Quick Action Grid */}
-      <div className="grid grid-cols-4 gap-6">
-        <QuickActionCard icon={Calendar} title="Upcoming Sessions" description="8 sessions scheduled today" />
-        <QuickActionCard icon={FileText} title="Academic Reports" description="12 reports pending review" />
-        <QuickActionCard icon={CheckSquare} title="Assignments" description="Check new submissions" />
-        <BroadcastAction students={allList as any[]} teacherName={teacherName} centerName={centerName} variant="card" />
-      </div>
     </div>
-  );
-}
-
-function QuickActionCard({ icon: Icon, title, description }: { icon: any; title: string; description: string }) {
-  return (
-    <Card className="border-none p-6 shadow-sm transition-all hover:translate-y-[-4px] cursor-pointer bg-surface-container-low hover:bg-surface-container text-primary">
-      <div className="p-2 bg-white/20 rounded-lg w-fit mb-4">
-        <Icon className="h-5 w-5 text-primary" />
-      </div>
-      <p className="font-bold text-sm tracking-tight">{title}</p>
-      <p className="text-xs font-medium opacity-60 text-on-surface-variant mt-1">{description}</p>
-    </Card>
   );
 }

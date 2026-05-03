@@ -47,13 +47,13 @@ export default async function SettingsPage() {
       {/* Page header */}
       <div>
         <p className="text-xs font-bold tracking-[0.2em] uppercase text-on-surface-variant/50 mb-2">
-          Account
+          Compte
         </p>
         <h1 className="text-4xl font-bold font-manrope text-primary">
-          Profile Settings
+          Paramètres du profil
         </h1>
         <p className="mt-2 text-sm text-on-surface-variant/70 font-medium">
-          Your details are used to personalise WhatsApp reminders and your dashboard.
+          Vos informations sont utilisées pour personnaliser vos rappels WhatsApp et votre tableau de bord.
         </p>
       </div>
 
@@ -68,7 +68,7 @@ export default async function SettingsPage() {
         </div>
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-50 mb-1">
-            Signed in as
+            Connecté en tant que
           </p>
           <h2 className="text-2xl font-bold font-manrope leading-tight">
             {defaultFullName || "Teacher"}
@@ -85,9 +85,9 @@ export default async function SettingsPage() {
             <Shield className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <p className="text-sm font-bold text-primary">Teacher Profile</p>
+            <p className="text-sm font-bold text-primary">Profil enseignant</p>
             <p className="text-[11px] text-on-surface-variant/50 font-medium">
-              Stored securely — only visible to you.
+              Stocké de façon sécurisée — visible uniquement par vous.
             </p>
           </div>
         </div>

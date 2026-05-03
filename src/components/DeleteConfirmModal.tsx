@@ -3,13 +3,14 @@
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { supabase } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import { Student } from "@/types/student";
 
 interface DeleteConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
-  student: any;
+  student: Student;
   isPermanent?: boolean;
 }
 
@@ -22,6 +23,7 @@ export function DeleteConfirmModal({ isOpen, onClose, student, isPermanent = fal
   const handleDelete = async () => {
     setLoading(true);
     try {
+      const supabase = createClient();
       if (isPermanent) {
         const { error } = await supabase
           .from("students")

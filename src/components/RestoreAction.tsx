@@ -3,7 +3,7 @@
 import { RotateCcw, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { supabase } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 
 interface RestoreActionProps {
@@ -17,6 +17,7 @@ export function RestoreAction({ studentId }: RestoreActionProps) {
   const handleRestore = async () => {
     setLoading(true);
     try {
+      const supabase = createClient();
       const { error } = await supabase
         .from("students")
         .update({ is_active: true })

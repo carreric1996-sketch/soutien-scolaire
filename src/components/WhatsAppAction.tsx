@@ -2,7 +2,7 @@
 
 import { MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +23,7 @@ export function WhatsAppAction({ studentId, url, className }: WhatsAppActionProp
 
     const updateTracking = async () => {
       try {
+        const supabase = createClient();
         await supabase
           .from("students")
           .update({ last_reminded_at: new Date().toISOString() })
@@ -52,4 +53,4 @@ export function WhatsAppAction({ studentId, url, className }: WhatsAppActionProp
     </Button>
   );
 }
-}
+

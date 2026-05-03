@@ -63,7 +63,7 @@ export function ProfileForm({
           htmlFor="full-name"
           className="text-xs font-bold uppercase tracking-[0.15em] text-on-surface-variant/70"
         >
-          Full Name
+          Nom complet
         </label>
         <div className="relative group">
           <User className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-on-surface-variant/40 group-focus-within:text-primary transition-colors" />
@@ -72,13 +72,13 @@ export function ProfileForm({
             type="text"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            placeholder="Your full name"
+            placeholder="Votre nom complet"
             required
             className="w-full pl-12 pr-5 py-4 bg-surface-container-low rounded-2xl text-sm font-semibold text-primary placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-4 focus:ring-primary/10 border border-transparent focus:border-primary/20 transition-all"
           />
         </div>
         <p className="text-[11px] text-on-surface-variant/50 pl-1">
-          This name will appear in WhatsApp payment reminders.
+          Ce nom apparaîtra dans les rappels de paiement WhatsApp.
         </p>
       </div>
 
@@ -88,7 +88,7 @@ export function ProfileForm({
           htmlFor="center-name"
           className="text-xs font-bold uppercase tracking-[0.15em] text-on-surface-variant/70"
         >
-          Center / School Name
+          Nom du centre / École
         </label>
         <div className="relative group">
           <Building2 className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-on-surface-variant/40 group-focus-within:text-primary transition-colors" />
@@ -102,7 +102,7 @@ export function ProfileForm({
           />
         </div>
         <p className="text-[11px] text-on-surface-variant/50 pl-1">
-          Optional — displayed in message signatures.
+          Optionnel — affiché dans les signatures de message.
         </p>
       </div>
 
@@ -112,7 +112,7 @@ export function ProfileForm({
           htmlFor="phone"
           className="text-xs font-bold uppercase tracking-[0.15em] text-on-surface-variant/70"
         >
-          Phone Number
+          Numéro de téléphone
         </label>
         <div className="relative group">
           <Phone className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-on-surface-variant/40 group-focus-within:text-primary transition-colors" />
@@ -139,20 +139,20 @@ export function ProfileForm({
           ) : (
             <Save className="h-4 w-4" />
           )}
-          {isPending ? "Saving…" : "Save Profile"}
+          {isPending ? "Enregistrement…" : "Enregistrer le profil"}
         </Button>
 
         {/* Inline feedback */}
         {status === "success" && (
           <div className="flex items-center gap-2 text-whatsapp animate-in fade-in slide-in-from-left-2 duration-300">
             <CheckCircle2 className="h-4 w-4" />
-            <span className="text-xs font-bold uppercase tracking-wider">Saved!</span>
+            <span className="text-xs font-bold uppercase tracking-wider">Enregistré !</span>
           </div>
         )}
         {status === "error" && (
           <div className="flex items-center gap-2 text-red-500 animate-in fade-in slide-in-from-left-2 duration-300">
             <AlertCircle className="h-4 w-4" />
-            <span className="text-xs font-bold uppercase tracking-wider">Error — try again.</span>
+            <span className="text-xs font-bold uppercase tracking-wider">Erreur — réessayez.</span>
           </div>
         )}
       </div>

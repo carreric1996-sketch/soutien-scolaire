@@ -76,8 +76,8 @@ export default async function ArchivePage() {
           <Table>
             <TableHeader>
               <TableRow className="border-none hover:bg-transparent">
-                <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/60 px-6 py-6">Student Name</TableHead>
-                <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/60">Level</TableHead>
+                <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/60 px-6 py-6">Nom de l'étudiant</TableHead>
+                <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/60">Niveau</TableHead>
                 <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/60">Matière</TableHead>
                 <TableHead className="text-[10px] font-bold uppercase tracking-[0.1em] text-on-surface-variant/60 text-right px-6">Actions</TableHead>
               </TableRow>

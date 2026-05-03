@@ -8,9 +8,10 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { Student } from "@/types/student";
 
 interface StudentDrawerProps {
-  student: any | null;
+  student: Student | null;
   onClose: () => void;
   onEditRequest: () => void;
   onArchiveComplete?: () => void; // optional cb after archiving
@@ -237,7 +238,7 @@ function InfoCard({
   value,
   className,
 }: {
-  icon: any;
+  icon: React.ElementType;
   label: string;
   value: string;
   className?: string;

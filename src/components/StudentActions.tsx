@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MoreVertical, Edit2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Student } from "@/types/student";
 import { StudentModal } from "./StudentModal";
 import { DeleteConfirmModal } from "./DeleteConfirmModal";
 import {
@@ -15,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface StudentActionsProps {
-  student: any;
+  student: Student;
   isArchived?: boolean;
 }
 
