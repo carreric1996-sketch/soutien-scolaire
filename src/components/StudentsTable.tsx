@@ -511,7 +511,7 @@ export function StudentsTable({
       <StudentModal
         isOpen={!!editStudent}
         onClose={handleModalClose}
-        student={editStudent}
+        student={editStudent || undefined}
       />
     </>
   );
